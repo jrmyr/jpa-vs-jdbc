@@ -1,0 +1,21 @@
+
+# Mac
+.DS_Store
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Build tool (Gradle)
+.gradle*
+out/
+build/
+
+# Others
+application-*test.y*ml

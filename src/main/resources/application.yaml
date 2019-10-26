@@ -1,0 +1,23 @@
+spring:
+  banner:
+    location: classpath:banner.txt
+  datasource:
+    url: jdbc:postgresql://localhost:54345/testdb
+    username: testuser
+    password: password
+
+  jpa:
+    databasePlatform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true #--> Better to define SQL output in log to also get the bind parameters
+    hibernate:
+      naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+      # Validate the entities against the DB schema at startup (BUT: not vice versa)
+      ddl-auto: validate
+    # Special JPA/Hibernate properties to make it work
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+#        temp:
+#          # (Potentially) speed up JPA Spring Boot startup
+#          use_jdbc_metadata_defaults: false
