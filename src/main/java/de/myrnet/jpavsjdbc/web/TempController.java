@@ -8,7 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController("/")
 @AllArgsConstructor(access = AccessLevel.PACKAGE, onConstructor_ = {@Autowired})
 public class TempController {
 
@@ -17,6 +20,15 @@ public class TempController {
     @GetMapping(path="temp/{uuid}", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> getProduct(@PathVariable("uuid") String uuidStr) {
         return ResponseEntity.ok("Product name: " + tempService.getProductName(uuidStr));
+    }
+
+    //Should be POST!!
+    @GetMapping(path="addTestData/{count}", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> addTestData(@PathVariable("count") int count) {
+
+        tempService.createTestDataset();
+
+        return ResponseEntity.ok("Seems to have worked");
     }
 
 }

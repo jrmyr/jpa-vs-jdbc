@@ -1,9 +1,5 @@
 #!/bin/bash
 
-echo "It might be needed to re-create the SQL files to initialize the DB."
-echo "If the files are OK, hit any key. If not, abort with CTRL-c"
-read
-
 DB_CONTAINER_NAME=jpa-vs-jdbc-test-db
 DB_CONTAINER_PORT=54345
 
