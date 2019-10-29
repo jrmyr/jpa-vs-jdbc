@@ -1,10 +1,7 @@
 package de.myrnet.jpavsjdbc.domain.model;
 
 import de.myrnet.jpavsjdbc.domain.DbBase;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,6 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @AllArgsConstructor @NoArgsConstructor
+@ToString
 public class ProductS extends DbBase {
 
     private String name;

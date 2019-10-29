@@ -1,6 +1,7 @@
 package de.myrnet.jpavsjdbc;
 
-import de.myrnet.jpavsjdbc.service.TempService;
+import de.myrnet.jpavsjdbc.service.DbService;
+import de.myrnet.jpavsjdbc.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,14 +15,19 @@ public class AppMainTempTest implements CommandLineRunner {
     }
 
     @Autowired
-    private TempService tempService;
+    private TestService testService;
+
+    @Autowired
+    private DbService dbService;
 
     @Override
     public void run(String... args) throws Exception {
 
-        tempService.createTestDataset();
+//        dbService.createSimpleTestDataset();
+//
+//        tempService.testThings();
 
-        tempService.testThings();
+        dbService.createMassiveTestData();
 
         System.out.println("ENDE");
     }
