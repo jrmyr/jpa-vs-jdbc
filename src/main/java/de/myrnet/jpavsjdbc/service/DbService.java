@@ -1,5 +1,6 @@
 package de.myrnet.jpavsjdbc.service;
 
+import de.myrnet.jpavsjdbc.domain.DbBase;
 import de.myrnet.jpavsjdbc.domain.model.*;
 import de.myrnet.jpavsjdbc.domain.repo.*;
 import lombok.AccessLevel;
@@ -14,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -25,7 +29,7 @@ public class DbService {
     private ProductRepo productRepo;
     private InvoiceRepo invoiceRepo;
     private OrderRepo orderRepo;
-    private OrderedProductRepo orderedProductSRepo;
+    private OrderedProductRepo orderedProductRepo;
     private ShopRepo shopRepo;
 
     public boolean createSimpleTestDataset() {
@@ -56,23 +60,21 @@ public class DbService {
 
         OrderedProductS oBall = new OrderedProductS(order, ball, new BigDecimal("10"));
         OrderedProductS oGoals = new OrderedProductS(order, goals, new BigDecimal("20"));
-        orderedProductSRepo.saveAll(List.of(oBall, oGoals));
+        orderedProductRepo.saveAll(List.of(oBall, oGoals));
     }
 
     @Transactional
-    public void createMassiveTestData() {
-        ShopS shop = createAndSaveShop();
-
+    public void createMassiveTestData(String shopName) {
+        ShopS shop = createAndSaveShop(shopName);
         createAndSaveOrders(shop, 50);
         createAndSaveOrders(shop, 180);
         createAndSaveOrders(shop, 2000);
     }
 
     @SneakyThrows
-    private ShopS createAndSaveShop() {
-        String name = RandomStringUtils.randomAlphanumeric(20);
-        String urlStr = "http://" + name.replace(" ", "-") + ".com";
-        ShopS shop = new ShopS(name, new URL(urlStr));
+    private ShopS createAndSaveShop(String shopName) {
+        String urlStr = "http://" + shopName.replace(" ", "-") + ".com";
+        ShopS shop = new ShopS(shopName, new URL(urlStr));
         shopRepo.save(shop);
         return shop;
     }
@@ -83,7 +85,7 @@ public class DbService {
         List<OrderedProductS> orderedProducts = createOrderedProductList(order, orderedProductsCount);
         orderedProducts.forEach(op -> {
             productRepo.save(op.getProduct());
-            orderedProductSRepo.save(op);
+            orderedProductRepo.save(op);
         });
         return Triple.of(order, invoice, orderedProducts);
     }
@@ -122,6 +124,30 @@ public class DbService {
                 "ADDRESS__" + number,
                 RandomStringUtils.randomAlphabetic(10),
                 new BigDecimal((Math.random() * 1000.0) + ""));
+    }
+
+    @Transactional
+    public long analyseDescriptionsJpa(String shopName) {
+        long start = System.currentTimeMillis();
+        //List<UUID> shopIds = shopRepo.findAll().stream().map(DbBase::getId).collect(Collectors.toList());
+        ShopS shop = shopRepo.findByName(shopName);
+        List<UUID> orderedProductIds = shop.getOrders().stream()
+                .flatMap(o -> o.getOrderedProducts().stream())
+                .map(DbBase::getId)
+                .collect(Collectors.toList());
+        System.out.println("UUID count: " + orderedProductIds.size());
+
+        for (UUID uuid : orderedProductIds) {
+            String desc = orderedProductRepo.getOne(uuid).getProduct().getDescription();
+            String sortedDesc = sortString(desc);
+        }
+        return  System.currentTimeMillis() - start;
+    }
+
+    private String sortString(String input) {
+        char[] inputChars = input.toCharArray();
+        Arrays.sort(inputChars);
+        return new String(inputChars);
     }
 
 }

@@ -27,7 +27,12 @@ public class AppMainTempTest implements CommandLineRunner {
 //
 //        tempService.testThings();
 
-        dbService.createMassiveTestData();
+        String exampleShopName = "buymesomething";
+
+//        dbService.createMassiveTestData(exampleShopName);
+
+        long sortTimeJpa = dbService.analyseDescriptionsJpa(exampleShopName);
+        System.out.println("Sorting lasted " + sortTimeJpa + "ms");
 
         System.out.println("ENDE");
     }
