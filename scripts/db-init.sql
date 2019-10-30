@@ -60,7 +60,7 @@ CREATE TABLE ordered_products (
 --
 
 INSERT INTO shops(name, web_address) VALUES
-('Cheapo', 'www.cheap-o.com');
+('Cheapo', 'http://www.cheap-o.com');
 ;
 
 INSERT INTO products(name, description, default_price) VALUES

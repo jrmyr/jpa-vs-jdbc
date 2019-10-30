@@ -1,13 +1,11 @@
 package de.myrnet.jpavsjdbc.domain.model;
 
 import de.myrnet.jpavsjdbc.domain.DbBase;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.net.URL;
@@ -25,8 +23,7 @@ public class ShopS extends DbBase {
     private URL webAddress;
 
     // "Code-only" relation
-    @OneToMany
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "shop")
     private List<OrderS> orders;
 
     public ShopS(String name, URL webAddress) {

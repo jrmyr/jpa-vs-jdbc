@@ -19,7 +19,7 @@ public class OrderedProductS extends DbBase {
     @ManyToOne
     private OrderS order;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private ProductS product;
 
     private BigDecimal appliedPrice;

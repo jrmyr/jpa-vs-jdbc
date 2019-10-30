@@ -16,12 +16,11 @@ public class OrderS extends DbBase {
 
     private LocalDateTime date;
 
-    @OneToOne
+    @ManyToOne
     private ShopS shop;
 
     // "Code-only" relation
-    @OneToMany
-    @JoinColumn(name = "order_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderedProductS> orderedProducts;
 
     @OneToOne
