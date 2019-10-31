@@ -7,6 +7,7 @@ import de.myrnet.jpavsjdbc.domain.repo.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor(access = AccessLevel.PACKAGE, onConstructor_ = {@Autowired})
+@Slf4j
 public class DbService {
 
     private ProductRepo productRepo;
@@ -39,7 +41,7 @@ public class DbService {
         try {
             doCreateSimpleTestDataset();
         } catch (Exception ex) {
-            System.out.println("Creation failed/skipped: " + ex.getLocalizedMessage());
+            log.warn("Simple data creation failed/skipped: " + ex.getLocalizedMessage());
             return false;
         }
         return true;
@@ -66,8 +68,19 @@ public class DbService {
         orderedProductRepo.saveAll(List.of(oBall, oGoals));
     }
 
+    public boolean createMassiveTestData(String shopName) {
+        try {
+            doCreateMassiveTestData(shopName);
+        } catch (Exception ex) {
+            log.warn("Massive data creation failed/skipped. Might already be there. " +
+                    "Exception : " + ex.getLocalizedMessage());
+            return false;
+        }
+        return true;
+    }
+
     @Transactional
-    public void createMassiveTestData(String shopName) {
+    void doCreateMassiveTestData(String shopName) {
         ShopS shop = createAndSaveShop(shopName);
         createAndSaveOrders(shop, 50);
         createAndSaveOrders(shop, 180);

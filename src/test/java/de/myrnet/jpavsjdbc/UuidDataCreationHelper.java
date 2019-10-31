@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-public class UuidDataCreation {
+public class UuidDataCreationHelper {
 
     @Test
     public void createUuids() {
