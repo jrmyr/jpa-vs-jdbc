@@ -29,10 +29,17 @@ public class AppMainTempTest implements CommandLineRunner {
 
         String exampleShopName = "buymesomething";
 
-//        dbService.createMassiveTestData(exampleShopName);
+        try {
+            dbService.createMassiveTestData(exampleShopName);
+        } catch (Exception ex) {
+            System.out.println("Data not created - might be there already");
+        }
 
         long sortTimeJpa = dbService.analyseDescriptionsJpa(exampleShopName);
-        System.out.println("Sorting lasted " + sortTimeJpa + "ms");
+        System.out.println("Sorting JPA lasted " + sortTimeJpa + "ms");
+
+        long sortTimeJdbc = dbService.analyseDescriptionsJdbc(exampleShopName);
+        System.out.println("Sorting JDBC lasted " + sortTimeJdbc + "ms");
 
         System.out.println("ENDE");
     }

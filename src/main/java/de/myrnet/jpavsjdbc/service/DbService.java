@@ -1,6 +1,7 @@
 package de.myrnet.jpavsjdbc.service;
 
 import de.myrnet.jpavsjdbc.domain.DbBase;
+import de.myrnet.jpavsjdbc.domain.adhoc.OrderItemDao;
 import de.myrnet.jpavsjdbc.domain.model.*;
 import de.myrnet.jpavsjdbc.domain.repo.*;
 import lombok.AccessLevel;
@@ -31,6 +32,8 @@ public class DbService {
     private OrderRepo orderRepo;
     private OrderedProductRepo orderedProductRepo;
     private ShopRepo shopRepo;
+
+    private OrderItemDao orderItemDao;
 
     public boolean createSimpleTestDataset() {
         try {
@@ -129,14 +132,11 @@ public class DbService {
     @Transactional
     public long analyseDescriptionsJpa(String shopName) {
         long start = System.currentTimeMillis();
-        //List<UUID> shopIds = shopRepo.findAll().stream().map(DbBase::getId).collect(Collectors.toList());
         ShopS shop = shopRepo.findByName(shopName);
         List<UUID> orderedProductIds = shop.getOrders().stream()
                 .flatMap(o -> o.getOrderedProducts().stream())
                 .map(DbBase::getId)
                 .collect(Collectors.toList());
-        System.out.println("UUID count: " + orderedProductIds.size());
-
         for (UUID uuid : orderedProductIds) {
             String desc = orderedProductRepo.getOne(uuid).getProduct().getDescription();
             String sortedDesc = sortString(desc);
@@ -148,6 +148,16 @@ public class DbService {
         char[] inputChars = input.toCharArray();
         Arrays.sort(inputChars);
         return new String(inputChars);
+    }
+
+    @Transactional
+    public long analyseDescriptionsJdbc(String shopName) {
+        long start = System.currentTimeMillis();
+        orderItemDao.getAllOrderedItemsForShop(shopName).forEach(oi -> {
+            String desc = oi.getProductDescription();
+            String sortedDesc = sortString(desc);
+        });
+        return  System.currentTimeMillis() - start;
     }
 
 }
